@@ -11,3 +11,5 @@ spec:
   destination:
     server: https://kubernetes.default.svc
     namespace: default
+
+#check-1
