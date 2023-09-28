@@ -1,0 +1,40 @@
+apiVersion: tekton.dev/v1beta1
+kind: Pipeline
+metadata:
+  name: webapp-pipeline
+spec:
+  params:
+  - name: IMAGE_NAME
+    description: The name of the image to build and deploy.
+    default: my-web-app
+  - name: IMAGE_TAG
+    description: The tag of the image to build and deploy.
+    default: latest
+  workspaces:
+  - name: source
+  - name: output
+  tasks:
+  - name: build
+    taskRef:
+      name: buildah-build
+      kind: ClusterTask
+    workspaces:
+      - name: output
+        workspace: source
+    params:
+      - name: IMAGE_NAME
+        value: $(params.IMAGE_NAME)
+      - name: IMAGE_TAG
+        value: $(params.IMAGE_TAG)
+  - name: deploy
+    taskRef:
+      name: kubernetes-deploy
+      kind: ClusterTask
+    workspaces:
+      - name: source
+        workspace: output
+    params:
+      - name: IMAGE_NAME
+        value: $(params.IMAGE_NAME)
+      - name: IMAGE_TAG
+        value: $(params.IMAGE_TAG)

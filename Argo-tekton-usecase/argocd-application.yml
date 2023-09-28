@@ -1,0 +1,13 @@
+# ArgoCD application
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: webapp
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/subhash36/argo-tekton-sample
+    path: .
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: default
